@@ -103,4 +103,15 @@ const typeLabel = computed(() => {
     margin: 0;
   }
 }
+
+@media (max-width: 576px) {
+  .order-result-card {
+    padding: 12px;
+
+    &__header {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+}
 </style>

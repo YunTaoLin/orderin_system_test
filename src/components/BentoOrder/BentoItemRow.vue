@@ -41,6 +41,11 @@ defineEmits<{ (e: 'updateQty', val: number): void }>()
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 0;
+  }
+
+  &__info {
+    min-width: 0;
   }
 
   &__img {
@@ -55,12 +60,30 @@ defineEmits<{ (e: 'updateQty', val: number): void }>()
     color: $text-color;
     font-size: 14px;
     margin: 0;
+    word-break: break-word;
   }
 
   &__price {
     color: $text-secondary;
     font-size: 12px;
     margin: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .bento-item-row {
+    align-items: flex-start;
+    gap: 10px;
+
+    &__left {
+      gap: 8px;
+      flex: 1;
+    }
+
+    &__img {
+      width: 42px;
+      height: 42px;
+    }
   }
 }
 </style>

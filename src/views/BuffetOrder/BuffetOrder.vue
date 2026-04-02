@@ -114,4 +114,28 @@ function handleSubmit() {
     gap: 32px;
   }
 }
+
+@media (max-width: 768px) {
+  .buffet-order {
+    &__submit-row {
+      margin-bottom: 16px;
+    }
+
+    &__list {
+      gap: 20px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .buffet-order {
+    &__submit-row {
+      justify-content: stretch;
+    }
+
+    &__submit-btn {
+      width: 100%;
+    }
+  }
+}
 </style>

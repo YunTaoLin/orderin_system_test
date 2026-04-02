@@ -84,6 +84,7 @@ function handleQtyChange(val: number) {
   &__info {
     display: flex;
     gap: 12px;
+    min-width: 0;
   }
 
   &__img-wrap {
@@ -107,6 +108,7 @@ function handleQtyChange(val: number) {
     font-size: 14px;
     line-height: 1.3;
     margin: 0;
+    word-break: break-word;
   }
 
   &__price {
@@ -133,6 +135,20 @@ function handleQtyChange(val: number) {
 
     &:hover {
       background: #f3f4f6;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .set-meal-card {
+    padding: 12px;
+
+    &__top {
+      gap: 10px;
+    }
+
+    &__info {
+      gap: 10px;
     }
   }
 }

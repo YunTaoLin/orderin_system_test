@@ -5,7 +5,7 @@
         <span class="search-filter__label">用餐地點</span>
         <a-select
           :value="searchStore.params.location"
-          style="width: 140px"
+          class="search-filter__control search-filter__control--md"
           :options="locationOptions"
           @update:value="(val: string) => searchStore.updateParams({ location: val })"
         />
@@ -15,7 +15,7 @@
         <span class="search-filter__label">用餐日期</span>
         <a-date-picker
           :value="searchStore.params.date"
-          style="width: 150px"
+          class="search-filter__control search-filter__control--md"
           @update:value="(val: any) => searchStore.updateParams({ date: val })"
         />
       </div>
@@ -25,7 +25,7 @@
           <span class="search-filter__label">時段</span>
           <a-select
             :value="searchStore.params.timeSlot"
-            style="width: 100px"
+            class="search-filter__control search-filter__control--sm"
             :options="timeSlotOptions"
             @update:value="(val: string) => searchStore.updateParams({ timeSlot: val })"
           />
@@ -35,7 +35,7 @@
           <a-time-picker
             :value="searchStore.params.pickupTime"
             format="HH:mm"
-            style="width: 100px"
+            class="search-filter__control search-filter__control--sm"
             @update:value="(val: any) => searchStore.updateParams({ pickupTime: val })"
           />
         </div>
@@ -93,6 +93,19 @@ const searchStore = useSearchStore()
     display: flex;
     align-items: center;
     gap: 8px;
+    flex: 1 1 180px;
+  }
+
+  &__control {
+    width: 100%;
+
+    &--md {
+      max-width: 180px;
+    }
+
+    &--sm {
+      max-width: 120px;
+    }
   }
 
   &__label {
@@ -115,6 +128,52 @@ const searchStore = useSearchStore()
 
     &--danger {
       color: $danger-color;
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__row {
+      gap: 12px;
+    }
+
+    &__field {
+      flex: 1 1 calc(50% - 6px);
+      min-width: 0;
+    }
+
+    &__control {
+      &--md,
+      &--sm {
+        max-width: none;
+      }
+    }
+
+    &__action {
+      margin-left: 0;
+      width: 100%;
+
+      .ant-btn {
+        width: 100%;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    &__field {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      width: 100%;
+      flex-basis: 100%;
+    }
+
+    &__control {
+      width: 100%;
+    }
+
+    &__hint {
+      margin-top: 12px;
+      line-height: 1.6;
     }
   }
 }

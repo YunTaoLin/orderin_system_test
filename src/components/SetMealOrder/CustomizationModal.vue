@@ -3,7 +3,7 @@
     :open="visible"
     :closable="false"
     :footer="null"
-    width="600px"
+    width="min(600px, calc(100vw - 24px))"
     @cancel="handleCancel"
   >
     <template #title>
@@ -121,6 +121,7 @@ function handleCancel() {
     justify-content: space-between;
     align-items: center;
     margin-right: -8px;
+    gap: 12px;
   }
 
   &__title {
@@ -133,6 +134,7 @@ function handleCancel() {
   &__actions {
     display: flex;
     gap: 12px;
+    flex-shrink: 0;
   }
 
   &__save {
@@ -156,6 +158,24 @@ function handleCancel() {
   &__section--disabled {
     opacity: 0.45;
     pointer-events: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-modal {
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-right: 0;
+    }
+
+    &__actions {
+      width: 100%;
+
+      .ant-btn {
+        flex: 1;
+      }
+    }
   }
 }
 </style>

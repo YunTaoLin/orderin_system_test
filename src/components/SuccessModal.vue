@@ -2,7 +2,7 @@
   <a-modal
     :open="visible"
     :footer="null"
-    width="400px"
+    width="min(400px, calc(100vw - 24px))"
     @cancel="$emit('close')"
   >
     <template #title>
@@ -101,6 +101,20 @@ defineEmits<{ (e: 'close'): void }>()
     font-weight: 700;
     font-size: 20px;
     margin-left: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .success-modal {
+    &__footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    &__total-value {
+      font-size: 18px;
+    }
   }
 }
 </style>

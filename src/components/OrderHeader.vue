@@ -11,7 +11,7 @@
         <a-input
           :value="phone"
           placeholder="#5311"
-          style="width: 120px"
+          class="order-header__phone-input"
           @update:value="(val: string) => $emit('update:phone', val)"
         />
       </div>
@@ -74,12 +74,18 @@ defineEmits<{
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   &__phone {
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+
+  &__phone-input {
+    width: 140px;
   }
 
   &__required {
@@ -96,6 +102,39 @@ defineEmits<{
   &__submit {
     background-color: $primary-color !important;
     border-color: $primary-color !important;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    &__actions {
+      width: 100%;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    &__prepaid-value {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    &__phone {
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    &__phone-input {
+      width: 100%;
+    }
+
+    &__submit {
+      width: 100%;
+    }
   }
 }
 </style>

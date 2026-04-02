@@ -166,4 +166,21 @@ function handleSubmit() {
     gap: 16px;
   }
 }
+
+@media (max-width: 768px) {
+  .set-meal-order {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .set-meal-order {
+    &__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}
 </style>

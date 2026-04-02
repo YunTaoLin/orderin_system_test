@@ -110,4 +110,12 @@ function handleSubmit() {
     gap: 32px;
   }
 }
+
+@media (max-width: 768px) {
+  .bento-order {
+    &__list {
+      gap: 20px;
+    }
+  }
+}
 </style>

@@ -41,7 +41,7 @@ const cardStyle = computed(() => {
   border: 1px solid;
   border-radius: $radius-md;
   padding: 16px;
-  width: 288px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -75,6 +75,17 @@ const cardStyle = computed(() => {
       &__btn {
         color: black;
       }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .meal-card {
+    gap: 12px;
+    padding: 12px;
+
+    &__desc {
+      font-size: 13px;
     }
   }
 }

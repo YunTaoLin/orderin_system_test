@@ -63,3 +63,30 @@ body {
     }
   }
 }
+
+@media (max-width: 768px) {
+  .ant-tabs-nav {
+    padding: 0 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .ant-tabs-tab {
+    padding: 10px 8px !important;
+  }
+
+  .ant-modal-header {
+    padding: 16px;
+  }
+
+  .ant-modal-body {
+    padding: 16px;
+  }
+
+  .page-container {
+    padding: 0 12px 56px;
+  }
+
+  .bento-collapse.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    padding: 12px !important;
+  }
+}

@@ -49,9 +49,24 @@ function getCount(idx: number): number {
   }
 
   &__meals {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 16px;
-    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .buffet-day {
+    padding-bottom: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .buffet-day {
+    &__meals {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
   }
 }
 </style>

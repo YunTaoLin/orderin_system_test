@@ -10,7 +10,6 @@
       accordion
       expand-icon-position="end"
       class="bento-collapse"
-      :style="{ width: '700px' }"
     >
       <a-collapse-panel
         v-for="(period, idx) in dayMenu.periods"
@@ -34,7 +33,10 @@
             v-for="item in period.items"
             :key="item.id"
             :item="item"
-            @update-qty="(val) => $emit('updateQty', dayMenu.date, period.key, item.id, val)"
+            @update-qty="
+              (val) =>
+                $emit('updateQty', dayMenu.date, period.key, item.id, val)
+            "
           />
         </div>
       </a-collapse-panel>
@@ -82,9 +84,9 @@ function periodTotal(period: BentoPeriod): number {
   border-bottom: 1px solid $border-color;
   padding-bottom: 24px;
 
-  &__panel{
-    width: 340px;
-    align-self: flex-start;
+  &__panel {
+    width: 100%;
+    max-width: 360px;
   }
 
   &__date {
@@ -125,9 +127,31 @@ function periodTotal(period: BentoPeriod): number {
     gap: 4px;
   }
 }
+
 .bento-collapse {
+  width: 100%;
   display: flex;
-  gap: 24px;
-  align-items: flex-start;
+  gap: 32px;
+}
+
+@media (max-width: 768px) {
+  .bento-day {
+    padding-bottom: 16px;
+
+    &__date {
+      margin-bottom: 12px;
+    }
+
+    &__summary,
+    &__total {
+      font-size: 13px;
+    }
+  }
+  .bento-collapse {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
 }
 </style>
