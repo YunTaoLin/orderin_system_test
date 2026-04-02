@@ -21,6 +21,7 @@
     <SuccessModal
       :visible="orderStore.showSuccess"
       :prepaid-amount="0"
+      :show-footer="false"
       @close="orderStore.closeSuccess()"
     >
       <OrderResultCard

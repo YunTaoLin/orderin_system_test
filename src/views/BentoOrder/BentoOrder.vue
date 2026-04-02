@@ -71,8 +71,10 @@ function handleSearch() {
   // reserved
 }
 
-function handleUpdateQty(periodKey: string, itemId: string, val: number) {
+function handleUpdateQty(dayDate: string, periodKey: string, itemId: string, val: number) {
   for (const day of menuList.value) {
+    if (day.date !== dayDate) continue
+
     for (const period of day.periods) {
       if (period.key === periodKey) {
         const item = period.items.find(i => i.id === itemId)

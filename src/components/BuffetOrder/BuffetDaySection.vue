@@ -2,7 +2,7 @@
   <div class="buffet-day">
     <h3 class="buffet-day__date">{{ dayMenu.date }} ({{ dayMenu.weekday }})</h3>
     <p v-if="dayMenu.notice" class="buffet-day__notice">{{ dayMenu.notice }}</p>
-    <div v-else class="buffet-day__meals">
+    <div v-if="dayMenu?.meals.length > 0" class="buffet-day__meals">
       <BuffetMealCard
         v-for="(meal, idx) in dayMenu.meals"
         :key="idx"
@@ -15,19 +15,19 @@
 </template>
 
 <script setup lang="ts">
-import type { BuffetDayMenu } from '@/types'
-import BuffetMealCard from './BuffetMealCard.vue'
+import type { BuffetDayMenu } from "@/types";
+import BuffetMealCard from "./BuffetMealCard.vue";
 
 interface Props {
-  dayMenu: BuffetDayMenu
-  counts: number[]
+  dayMenu: BuffetDayMenu;
+  counts: number[];
 }
 
-const props = defineProps<Props>()
-defineEmits<{ (e: 'updateCount', mealIndex: number, value: number): void }>()
+const props = defineProps<Props>();
+defineEmits<{ (e: "updateCount", mealIndex: number, value: number): void }>();
 
 function getCount(idx: number): number {
-  return props.counts[idx] ?? 0
+  return props.counts[idx] ?? 0;
 }
 </script>
 

@@ -50,7 +50,19 @@ src/
 ├── api/                  # 資料取得層
 │   ├── meal.api.ts       # 所有餐點相關的 fetch function
 │   └── index.ts
-├── components/           # 全域共用元件
+├── components/           # 共用元件（全域 + 各頁面子元件）
+│   ├── BentoOrder/
+│   │   ├── BentoDaySection.vue
+│   │   ├── BentoItemRow.vue
+│   │   └── index.ts
+│   ├── BuffetOrder/
+│   │   ├── BuffetDaySection.vue
+│   │   ├── BuffetMealCard.vue
+│   │   └── index.ts
+│   ├── SetMealOrder/
+│   │   ├── CustomizationModal.vue
+│   │   ├── SetMealCard.vue
+│   │   └── index.ts
 │   ├── NumberControl.vue
 │   ├── SearchFilter.vue
 │   ├── OrderHeader.vue
@@ -93,26 +105,19 @@ src/
 │   └── index.ts
 └── views/
     ├── BuffetOrder/
-    │   ├── BuffetOrder.vue
-    │   └── components/
-    │       ├── BuffetDaySection.vue
-    │       └── BuffetMealCard.vue
+    │   └── BuffetOrder.vue
     ├── BentoOrder/
-    │   ├── BentoOrder.vue
-    │   └── components/
-    │       ├── BentoDaySection.vue
-    │       └── BentoItemRow.vue
+    │   └── BentoOrder.vue
     └── SetMealOrder/
-        ├── SetMealOrder.vue
-        └── components/
-            ├── SetMealCard.vue
-            └── CustomizationModal.vue
+        └── SetMealOrder.vue
 ```
 
 ### 元件歸屬原則
 
-- `src/components/` — 跨頁面共用的元件。
-- `src/views/XxxOrder/components/` — 僅供該頁面使用的子元件，不透過 barrel export 暴露。
+- `src/components/` — 所有元件統一放置於此。
+  - 根目錄下為跨頁面共用元件（`NumberControl`, `SearchFilter` 等）。
+  - 頁面專屬子元件放在以頁面同名的子資料夾下（`BentoOrder/`, `BuffetOrder/`, `SetMealOrder/`），並透過各自的 `index.ts` 做 barrel export。
+- `src/views/XxxOrder/` — 僅保留頁面層級的 `.vue` 檔，不再有 `components/` 子目錄。
 
 ## Barrel Export 機制
 
@@ -127,10 +132,10 @@ import { formatCurrency, generateTicketId } from '@/utils'
 import { useOrderStore } from '@/stores/order.store'
 ```
 
-頁面專屬子元件例外，直接用相對路徑引入：
+頁面專屬子元件統一透過 `@/components` 路徑引入：
 
 ```typescript
-import BuffetDaySection from './components/BuffetDaySection.vue'
+import BuffetDaySection from '@/components/BuffetOrder/BuffetDaySection.vue'
 ```
 
 ## Mock Data 機制

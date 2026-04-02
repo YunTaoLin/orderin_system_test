@@ -1,37 +1,37 @@
-# 報餐系統（Meal Order System）
+# Meal Order System
 
-## 簡介
+## Introduction
 
-企業內部報餐系統前端專案，提供自助餐、便當、套餐三種報餐方式，員工可依據每日菜單選擇餐點並送出報餐。
+This is the frontend project for an internal corporate meal ordering system. It supports three ordering modes: buffet, bento, and set meal. Employees can choose items from the daily menu and submit their meal orders.
 
-## 技術棧
+## Tech Stack
 
-| 項目       | 版本 / 說明                |
+| Item | Version / Notes |
 | ---------- | -------------------------- |
-| Vue        | 3.5+                       |
-| Vite       | 6.x                        |
-| TypeScript | 5.7+                       |
-| Pinia      | 2.x（狀態管理）            |
-| Vue Router | 4.x（路由管理）            |
-| Ant Design Vue | 4.2.6（UI 元件庫）     |
-| SCSS       | 搭配 BEM 命名規範          |
+| Vue | 3.5+ |
+| Vite | 6.x |
+| TypeScript | 5.7+ |
+| Pinia | 2.x (state management) |
+| Vue Router | 4.x (routing) |
+| Ant Design Vue | 4.2.6 (UI component library) |
+| SCSS | Using BEM naming conventions |
 
-## 快速開始
+## Quick Start
 
 ```bash
 npm install
 npm run dev
 ```
 
-開發伺服器會啟動在 `http://localhost:5173`。
+The development server will run at `http://localhost:5173`.
 
-## 建置
+## Build
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## 文件位置
+## Documentation
 - [Project Architecture](architecture.md)
 - [Code Style](code_style.md) 

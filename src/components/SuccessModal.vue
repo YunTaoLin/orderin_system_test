@@ -23,7 +23,7 @@
       <slot />
     </div>
 
-    <div class="success-modal__footer">
+    <div v-if="showFooter" class="success-modal__footer">
       <span class="success-modal__salary-note">*薪水給付</span>
       <div class="success-modal__total">
         預付金額
@@ -39,9 +39,12 @@ import { formatCurrency } from '@/utils'
 interface Props {
   visible: boolean
   prepaidAmount: number
+  showFooter?: boolean
 }
 
-defineProps<Props>()
+withDefaults(defineProps<Props>(), {
+  showFooter: true,
+})
 defineEmits<{ (e: 'close'): void }>()
 </script>
 

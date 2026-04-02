@@ -5,45 +5,49 @@
       <p class="meal-card__desc">{{ meal.description }}</p>
     </div>
     <div class="meal-card__control">
-      <NumberControl :model-value="count" @update:model-value="$emit('update:count', $event)" />
+      <NumberControl
+        :model-value="count"
+        @update:model-value="$emit('update:count', $event)"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { BuffetMeal } from '@/types'
-import { mealColorMap } from '@/config'
-import { NumberControl } from '@/components'
+import { computed } from "vue";
+import type { BuffetMeal } from "@/types";
+import { mealColorMap } from "@/config";
+import { NumberControl } from "@/components";
 
 interface Props {
-  meal: BuffetMeal
-  count: number
+  meal: BuffetMeal;
+  count: number;
 }
 
-const props = defineProps<Props>()
-defineEmits<{ (e: 'update:count', value: number): void }>()
+const props = defineProps<Props>();
+defineEmits<{ (e: "update:count", value: number): void }>();
 
 const cardStyle = computed(() => {
-  const scheme = mealColorMap[props.meal.colorScheme] || mealColorMap.yellow
+  const scheme = mealColorMap[props.meal.colorScheme] || mealColorMap.yellow;
   return {
     backgroundColor: scheme.bg,
     borderColor: scheme.border,
-  }
-})
+  };
+});
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .meal-card {
   border: 1px solid;
   border-radius: $radius-md;
   padding: 16px;
   width: 288px;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   box-shadow: $shadow-sm;
   transition: box-shadow 0.2s;
+  gap: 16px;
 
   &:hover {
     box-shadow: $shadow-md;
@@ -64,8 +68,14 @@ const cardStyle = computed(() => {
   }
 
   &__control {
-    margin-top: 16px;
-    align-self: flex-end;
+    .number-control {
+      box-shadow: none;
+      background: transparent;
+      border: none;
+      &__btn {
+        color: black;
+      }
+    }
   }
 }
 </style>

@@ -158,8 +158,8 @@ import { bentoPrepaidAmount } from '@/mockData'
 // 8. Types（type-only import）
 import type { BentoDayMenu } from '@/types'
 
-// 9. 頁面子元件（相對路徑）
-import BentoDaySection from './components/BentoDaySection.vue'
+// 9. 頁面專屬子元件（透過 @/components 子資料夾）
+import BentoDaySection from '@/components/BentoOrder/BentoDaySection.vue'
 ```
 
 ### 元件結構順序

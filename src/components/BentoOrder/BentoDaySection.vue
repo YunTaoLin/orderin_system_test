@@ -6,14 +6,15 @@
 
     <a-collapse
       v-if="dayMenu.periods.length"
-      v-model:active-key="activeKeys"
+      v-model:activeKey="activeKey"
+      accordion
       expand-icon-position="end"
       class="bento-collapse"
-      :style="{ width: '340px' }"
+      :style="{ width: '700px' }"
     >
       <a-collapse-panel
-        v-for="period in dayMenu.periods"
-        :key="period.key"
+        v-for="(period, idx) in dayMenu.periods"
+        :key="`${dayMenu.date}-${idx}-${period.key}`"
         class="bento-day__panel"
       >
         <template #header>
@@ -23,7 +24,9 @@
           </div>
         </template>
         <template #extra>
-          <span class="bento-day__total">{{ formatCurrency(periodTotal(period)) }}</span>
+          <span class="bento-day__total">{{
+            formatCurrency(periodTotal(period))
+          }}</span>
         </template>
 
         <div class="bento-day__items">
@@ -31,7 +34,7 @@
             v-for="item in period.items"
             :key="item.id"
             :item="item"
-            @update-qty="(val) => $emit('updateQty', period.key, item.id, val)"
+            @update-qty="(val) => $emit('updateQty', dayMenu.date, period.key, item.id, val)"
           />
         </div>
       </a-collapse-panel>
@@ -40,29 +43,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { BentoDayMenu, BentoPeriod } from '@/types'
-import { formatCurrency } from '@/utils'
-import BentoItemRow from './BentoItemRow.vue'
+import { ref } from "vue";
+import type { BentoDayMenu, BentoPeriod } from "@/types";
+import { formatCurrency } from "@/utils";
+import BentoItemRow from "./BentoItemRow.vue";
 
 interface Props {
-  dayMenu: BentoDayMenu
+  dayMenu: BentoDayMenu;
 }
 
-defineProps<Props>()
-defineEmits<{ (e: 'updateQty', periodKey: string, itemId: string, val: number): void }>()
+defineProps<Props>();
+defineEmits<{
+  (
+    e: "updateQty",
+    dayDate: string,
+    periodKey: string,
+    itemId: string,
+    val: number,
+  ): void;
+}>();
 
-const activeKeys = ref<string[]>(['lunch'])
+const activeKey = ref<string>();
 
 function periodSummary(period: BentoPeriod): string {
   return period.items
-    .filter(item => item.qty > 0)
-    .map(item => `${item.name}x${item.qty}`)
-    .join('、')
+    .filter((item) => item.qty > 0)
+    .map((item) => `${item.name}x${item.qty}`)
+    .join("、");
 }
 
 function periodTotal(period: BentoPeriod): number {
-  return period.items.reduce((sum, item) => sum + item.price * item.qty, 0)
+  return period.items.reduce((sum, item) => sum + item.price * item.qty, 0);
 }
 </script>
 
@@ -70,6 +81,11 @@ function periodTotal(period: BentoPeriod): number {
 .bento-day {
   border-bottom: 1px solid $border-color;
   padding-bottom: 24px;
+
+  &__panel{
+    width: 340px;
+    align-self: flex-start;
+  }
 
   &__date {
     color: $info-color;
@@ -108,5 +124,10 @@ function periodTotal(period: BentoPeriod): number {
     flex-direction: column;
     gap: 4px;
   }
+}
+.bento-collapse {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
 }
 </style>
