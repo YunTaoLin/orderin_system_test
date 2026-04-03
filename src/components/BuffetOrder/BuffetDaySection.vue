@@ -49,8 +49,8 @@ function getCount(idx: number): number {
   }
 
   &__meals {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 16px;
   }
 }

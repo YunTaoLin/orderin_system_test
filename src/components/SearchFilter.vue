@@ -13,7 +13,14 @@
 
       <div class="search-filter__field">
         <span class="search-filter__label">用餐日期</span>
+        <WeekPicker
+          v-if="datePickerType === 'week'"
+          :value="searchStore.params.date"
+          class="search-filter__control search-filter__control--md"
+          @update:value="(val) => searchStore.updateParams({ date: val })"
+        />
         <a-date-picker
+          v-else
           :value="searchStore.params.date"
           class="search-filter__control search-filter__control--md"
           @update:value="(val: any) => searchStore.updateParams({ date: val })"
@@ -53,17 +60,20 @@
 </template>
 
 <script setup lang="ts">
+import WeekPicker from '@/components/WeekPicker.vue'
 import { useSearchStore } from '@/stores'
 import { locationOptions, timeSlotOptions } from '@/config'
 
 interface Props {
   showTimeFields?: boolean
+  datePickerType?: 'date' | 'week'
   deadlineText?: string
   isDangerHint?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   showTimeFields: false,
+  datePickerType: 'date',
   deadlineText: '',
   isDangerHint: false,
 })

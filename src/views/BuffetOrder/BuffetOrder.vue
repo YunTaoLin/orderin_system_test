@@ -1,9 +1,9 @@
 <template>
   <div class="buffet-order">
-    <SearchFilter :deadline-text="deadlineText" @search="handleSearch" />
+    <SearchFilter date-picker-type="week" :deadline-text="deadlineText" @search="handleSearch" />
 
     <div class="buffet-order__submit-row">
-      <a-button type="primary" class="buffet-order__submit-btn" size="large" @click="handleSubmit">
+      <a-button type="primary" class="buffet-order__submit-btn" size="large" :disabled="!canSubmit" @click="handleSubmit">
         送出報餐
       </a-button>
     </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { SearchFilter, SuccessModal, OrderResultCard } from '@/components'
 import { useOrderStore, useSearchStore } from '@/stores'
 import { fetchBuffetMenu } from '@/api'
@@ -48,6 +48,10 @@ const searchStore = useSearchStore()
 
 const menuList = ref<BuffetDayMenu[]>([])
 const dayCounts = ref<number[][]>([])
+
+const canSubmit = computed(() =>
+  dayCounts.value.some((day: number[]) => day.some((count: number) => count > 0)),
+)
 
 const deadlineText = `自助餐報餐截止時間：\n${buffetDeadlineConfig.map(d => `${d.period}：${d.description}`).join(' | ')}`
 
@@ -68,6 +72,8 @@ function handleSearch() {
 }
 
 function handleSubmit() {
+  if (!canSubmit.value) return
+
   const countMap: Record<string, number> = {}
   const descMap: Record<string, string> = {}
   const dateMap: Record<string, string> = {}
@@ -92,6 +98,12 @@ function handleSubmit() {
   )
 
   orderStore.setOrderResults(results, 0)
+
+  for (let dayIdx = 0; dayIdx < dayCounts.value.length; dayIdx++) {
+    for (let mealIdx = 0; mealIdx < dayCounts.value[dayIdx].length; mealIdx++) {
+      dayCounts.value[dayIdx][mealIdx] = 0
+    }
+  }
 }
 </script>
 

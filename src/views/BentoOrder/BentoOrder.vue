@@ -1,11 +1,12 @@
 <template>
   <div class="bento-order">
-    <SearchFilter :deadline-text="deadlineText" @search="handleSearch" />
+    <SearchFilter date-picker-type="week" :deadline-text="deadlineText" @search="handleSearch" />
 
     <OrderHeader
-      :prepaid-amount="bentoPrepaidAmount"
+      :prepaid-amount="prepaidAmount"
+      :disabled="!canSubmit"
       :phone="phone"
-      show-phone
+      :show-phone="false"
       @update:phone="phone = $event"
       @submit="handleSubmit"
     />
@@ -13,7 +14,7 @@
     <div class="bento-order__list">
       <BentoDaySection
         v-for="day in menuList"
-        :key="day.date"
+        :key="`${day.date}-${collapseResetVersion}`"
         :day-menu="day"
         @update-qty="handleUpdateQty"
       />
@@ -21,7 +22,7 @@
 
     <SuccessModal
       :visible="orderStore.showSuccess"
-      :prepaid-amount="bentoPrepaidAmount"
+      :prepaid-amount="orderStore.prepaidAmount"
       @close="orderStore.closeSuccess()"
     >
       <OrderResultCard
@@ -34,71 +35,113 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { SearchFilter, OrderHeader, SuccessModal, OrderResultCard } from '@/components'
-import { useOrderStore, useSearchStore } from '@/stores'
-import { fetchBentoMenu } from '@/api'
-import { buildBentoOrderResults } from '@/services'
-import { bentoDeadlineConfig } from '@/config'
-import { bentoPrepaidAmount } from '@/mockData'
-import type { BentoDayMenu, BentoProductDayMenu } from '@/types'
-import BentoDaySection from '@/components/BentoOrder/BentoDaySection.vue'
+import { computed, ref, onMounted } from "vue";
+import {
+  SearchFilter,
+  OrderHeader,
+  SuccessModal,
+  OrderResultCard,
+} from "@/components";
+import { useOrderStore, useSearchStore } from "@/stores";
+import { fetchBentoMenu } from "@/api";
+import { buildBentoOrderResults } from "@/services";
+import { bentoDeadlineConfig } from "@/config";
+import type { BentoDayMenu, BentoProductDayMenu } from "@/types";
+import BentoDaySection from "@/components/BentoOrder/BentoDaySection.vue";
 
-const orderStore = useOrderStore()
-const searchStore = useSearchStore()
+const orderStore = useOrderStore();
+const searchStore = useSearchStore();
 
-const menuList = ref<BentoDayMenu[]>([])
-const phone = ref('')
+const menuList = ref<BentoDayMenu[]>([]);
+const phone = ref("");
+const collapseResetVersion = ref(0);
 
-const deadlineText = `便當報餐截止時間：\n${bentoDeadlineConfig.map(d => `${d.period}：${d.description}`).join(' | ')}`
+const prepaidAmount = computed(() =>
+  menuList.value.reduce(
+    (sum, day) =>
+      sum +
+      day.periods.reduce(
+        (periodSum, period) =>
+          periodSum +
+          period.items.reduce((itemSum, item) => itemSum + item.qty * item.price, 0),
+        0,
+      ),
+    0,
+  ),
+);
+
+const canSubmit = computed(() =>
+  menuList.value.some((day) =>
+    day.periods.some((period) => period.items.some((item) => item.qty > 0)),
+  ),
+);
+
+const deadlineText = `便當報餐截止時間：\n${bentoDeadlineConfig.map((d) => `${d.period}：${d.description}`).join(" | ")}`;
 
 function toOrderMenu(products: BentoProductDayMenu[]): BentoDayMenu[] {
-  return products.map(day => ({
+  return products.map((day) => ({
     ...day,
-    periods: day.periods.map(period => ({
+    periods: day.periods.map((period) => ({
       ...period,
-      items: period.items.map(item => ({ ...item, qty: 0 })),
+      items: period.items.map((item) => ({ ...item, qty: 0 })),
     })),
-  }))
+  }));
 }
 
 onMounted(async () => {
-  const data = await fetchBentoMenu()
-  menuList.value = toOrderMenu(data)
-})
+  const data = await fetchBentoMenu();
+  menuList.value = toOrderMenu(data);
+});
 
 function handleSearch() {
   // reserved
 }
 
-function handleUpdateQty(dayDate: string, periodKey: string, itemId: string, val: number) {
+function handleUpdateQty(
+  dayDate: string,
+  periodKey: string,
+  itemId: string,
+  val: number,
+) {
   for (const day of menuList.value) {
-    if (day.date !== dayDate) continue
+    if (day.date !== dayDate) continue;
 
     for (const period of day.periods) {
       if (period.key === periodKey) {
-        const item = period.items.find(i => i.id === itemId)
-        if (item) item.qty = val
+        const item = period.items.find((i) => i.id === itemId);
+        if (item) item.qty = val;
       }
     }
   }
 }
 
 function handleSubmit() {
-  const allItems: Array<{ name: string; qty: number; price: number }> = []
+  if (!canSubmit.value) return;
 
-  menuList.value.forEach(day => {
-    day.periods.forEach(period => {
-      period.items.forEach(item => {
+  const allItems: Array<{ name: string; qty: number; price: number }> = [];
+
+  menuList.value.forEach((day) => {
+    day.periods.forEach((period) => {
+      period.items.forEach((item) => {
         if (item.qty > 0) {
-          allItems.push({ name: item.name, qty: item.qty, price: item.price })
+          allItems.push({ name: item.name, qty: item.qty, price: item.price });
         }
-      })
-    })
-  })
+      });
+    });
+  });
 
-  const results = buildBentoOrderResults(searchStore.params.location, allItems)
-  orderStore.setOrderResults(results, bentoPrepaidAmount)
+  const results = buildBentoOrderResults(searchStore.params.location, allItems);
+  orderStore.setOrderResults(results, prepaidAmount.value);
+
+  for (const day of menuList.value) {
+    for (const period of day.periods) {
+      for (const item of period.items) {
+        item.qty = 0;
+      }
+    }
+  }
+
+  collapseResetVersion.value++;
 }
 </script>
 

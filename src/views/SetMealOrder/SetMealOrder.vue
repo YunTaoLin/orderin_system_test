@@ -8,7 +8,8 @@
     />
 
     <OrderHeader
-      :prepaid-amount="setMealPrepaidAmount"
+      :prepaid-amount="prepaidAmount"
+      :disabled="!canSubmit"
       :phone="phone"
       show-phone
       @update:phone="phone = $event"
@@ -38,7 +39,7 @@
 
     <SuccessModal
       :visible="orderStore.showSuccess"
-      :prepaid-amount="setMealPrepaidAmount"
+      :prepaid-amount="orderStore.prepaidAmount"
       @close="orderStore.closeSuccess()"
     >
       <OrderResultCard
@@ -51,12 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { SearchFilter, OrderHeader, SuccessModal, OrderResultCard } from '@/components'
 import { useOrderStore, useSearchStore } from '@/stores'
 import { fetchSetMealMenu } from '@/api'
 import { buildSetMealOrderResults } from '@/services'
-import { setMealPrepaidAmount } from '@/mockData'
 import type { SetMealItem, CustomizationOption, SetMealCustomization, SetMealProduct } from '@/types'
 import SetMealCard from '@/components/SetMealOrder/SetMealCard.vue'
 import CustomizationModal from '@/components/SetMealOrder/CustomizationModal.vue'
@@ -67,6 +67,12 @@ const searchStore = useSearchStore()
 const mealList = ref<SetMealItem[]>([])
 const customizationOptions = ref<CustomizationOption[]>([])
 const phone = ref('')
+
+const prepaidAmount = computed(() =>
+  mealList.value.reduce<number>((sum: number, meal: SetMealItem) => sum + meal.qty * meal.price, 0),
+)
+
+const canSubmit = computed(() => mealList.value.some((meal: SetMealItem) => meal.qty > 0))
 
 const customModalVisible = ref(false)
 const activeMealIndex = ref(-1)
@@ -139,6 +145,8 @@ function handleQtyChange(mealIdx: number, val: number) {
 }
 
 function handleSubmit() {
+  if (!canSubmit.value) return
+
   const dateStr = searchStore.params.date
     ? searchStore.params.date.format('YYYY/MM/DD (dd)')
     : '2026/02/02 (一)'
@@ -152,7 +160,12 @@ function handleSubmit() {
     `${dateStr} ${timeStr}`,
   )
 
-  orderStore.setOrderResults(results, setMealPrepaidAmount)
+  orderStore.setOrderResults(results, prepaidAmount.value)
+
+  for (const meal of mealList.value) {
+    meal.qty = 0
+    meal.customizations = []
+  }
 }
 </script>
 

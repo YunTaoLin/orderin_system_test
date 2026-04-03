@@ -42,6 +42,7 @@ const cardStyle = computed(() => {
   border-radius: $radius-md;
   padding: 16px;
   width: 100%;
+  max-width: 290px;
   display: flex;
   justify-content: space-between;
   align-items: center;

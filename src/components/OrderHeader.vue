@@ -12,10 +12,10 @@
           :value="phone"
           placeholder="#5311"
           class="order-header__phone-input"
-          @update:value="(val: string) => $emit('update:phone', val)"
+          @update:value="handlePhoneUpdate"
         />
       </div>
-      <a-button type="primary" class="order-header__submit" @click="$emit('submit')">
+      <a-button type="primary" class="order-header__submit" :disabled="disabled" @click="$emit('submit')">
         送出報餐
       </a-button>
     </div>
@@ -29,17 +29,23 @@ interface Props {
   prepaidAmount: number
   showPhone?: boolean
   phone?: string
+  disabled?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   showPhone: true,
   phone: '',
+  disabled: false,
 })
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'submit'): void
   (e: 'update:phone', value: string): void
 }>()
+
+function handlePhoneUpdate(value: string) {
+  emit('update:phone', value)
+}
 </script>
 
 <style scoped lang="scss">
